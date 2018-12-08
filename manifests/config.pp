@@ -10,7 +10,7 @@ class nginx::config(
   String $pid_file              = $::nginx::config_pid_file,
   Optional[String] $vdir_enable = $::nginx::config_vdir_enable,
   String $process_user          = $::nginx::config_process_user,
-  String $docroot               = $::nginx::config_docroot,
+  String $docroot               = $::nginx::docroot,
 ) {
   file { 'nginx_conf':
     enusre => $ensure,
@@ -19,6 +19,19 @@ class nginx::config(
     owner  => $owner,
     group  => $group,
     content => template("${module_name}/conf.d/nginx.erb"),
+  }
+
+  file{ $log_dir:
+    ensure  => directory,
+    recures => true,
+  }
+
+  file { $docroot:
+    ensure   => directory,
+    recurses => true,
+    mode     => $mode,
+    owner    => $owner,
+    group    => $group,
   }
 
 }
